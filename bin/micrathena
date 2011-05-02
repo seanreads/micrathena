@@ -5,5 +5,25 @@ $LOAD_PATH << './lib'
 require 'lib/micrathena/spider'
 
 if __FILE__ == $0
-   
+
+  spider = Micrathena::Spider.new
+  spider.url = 'http://www.cnn.com'
+
+  def run(proc)
+    chars = %w{ | / - \\ }
+
+    t = Thread.new { proc }
+    while t.alive?
+      print chars[0]
+      sleep 0.1
+      print "\b"
+
+      chars.push chars.shift
+    end
+
+    t.join
+  end   
+  
+  run(lambda{spider.crawl})
+  
 end
